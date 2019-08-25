@@ -1,0 +1,17 @@
+{
+    "name": "php-feather/session",
+    "description": "Feather Session",
+    "type":"library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Francis Carbah",
+            "email": "afrounit@hotmail.com.com"
+        }
+    ],
+    "autoload":{
+        "psr-4":{
+            "Feather\\Session\\":"src/"
+        }
+    }
+}
