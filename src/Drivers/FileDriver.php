@@ -14,7 +14,7 @@ use Feather\Session\SessionException;
  *
  * @author fcarbah
  */
-class File {
+class FileDriver {
     
     private $path;
     

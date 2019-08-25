@@ -13,7 +13,7 @@ namespace Feather\Session\Drivers;
  *
  * @author fcarbah
  */
-class Database {
+class DatabaseDriver {
     
     private $db;
     private $config;

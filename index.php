@@ -28,13 +28,13 @@ function dbSession(){
         'password'=>''
     ];
     
-    $driver = new \Feather\Session\Drivers\Database($dbconfig);
+    $driver = new \Feather\Session\Drivers\DatabaseDriver($dbconfig);
     session_start();
     
 }
 
 function fileSession(){
-    $driver = new \Feather\Session\Drivers\File(dirname(__FILE__));
+    $driver = new \Feather\Session\Drivers\FileDriver(dirname(__FILE__));
     session_start();
 }
 
