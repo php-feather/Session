@@ -38,9 +38,16 @@ function fileSession(){
     session_start();
 }
 
+function redisSession(){
+    $driver = new \Feather\Session\Drivers\RedisDriver('localhost');
+    session_start();
+}
+
 //fileSession();
 //or
-dbSession();
+//dbSession();
+//or
+redisSession();
 
 Feather\Session\Session::set('test','steve');
 
