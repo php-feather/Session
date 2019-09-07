@@ -14,8 +14,13 @@ namespace Feather\Session;
  * @author fcarbah
  */
 class Session {
-    public static function flush(){
-        session_destroy();
+    public static function flush($destroy=false){
+        if($destroy){
+            session_destroy();
+        }
+        else {
+            session_unset();
+        }
     }
     
     public static function get($key,$remove = false){
