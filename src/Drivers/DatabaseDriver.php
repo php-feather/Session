@@ -13,7 +13,7 @@ namespace Feather\Session\Drivers;
  *
  * @author fcarbah
  */
-class DatabaseDriver {
+class DatabaseDriver implements SessionHandlerContract {
     
     private $db;
     private $config;
@@ -21,6 +21,9 @@ class DatabaseDriver {
     
     public function __construct($config) {
         $this->config = $config; 
+    }
+    
+    public function activate() {
         $this->connect();
         session_set_save_handler(
             array($this, "open"),

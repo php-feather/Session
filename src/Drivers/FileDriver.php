@@ -14,9 +14,9 @@ use Feather\Session\SessionException;
  *
  * @author fcarbah
  */
-class FileDriver {
+class FileDriver  implements SessionHandlerContract{
     
-    private $path;
+    protected $path;
     
     public function __construct($sessionPath) {
         
@@ -30,7 +30,11 @@ class FileDriver {
             throw new SessionException($sessionPath.' is not a writeable directory', 101);
         }
         
+    }
+    
+    public function activate() {
         session_save_path($this->path);
         ini_set('session.gc_probability', 1);
     }
+    
 }

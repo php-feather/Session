@@ -13,7 +13,9 @@ namespace Feather\Session\Drivers;
  *
  * @author fcarbah
  */
-class RedisDriver {
+class RedisDriver implements SessionHandlerContract{
+    
+    protected $path;
     
     public function __construct($server,$port='6379',$scheme='tcp',array $connOptions=array()) {
         
@@ -24,11 +26,13 @@ class RedisDriver {
             $optStr .="$key=$val&";
         }
         
-        $sessionPath= $savePath.'?'.substr($optStr, 0,strlen($optStr)-1);
-        
-        ini_set('session.save_handler', 'redis');
-        session_save_path($sessionPath);
+        $this->path= $savePath.'?'.substr($optStr, 0,strlen($optStr)-1);
 
+    }
+    
+    public function activate() {
+        ini_set('session.save_handler', 'redis');
+        session_save_path($this->path);
     }
     
 }
