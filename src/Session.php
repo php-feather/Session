@@ -38,6 +38,10 @@ class Session {
         return $data;
     }
     
+    public static function regenerate($deleteOld=true){
+        @session_regenerate_id($deleteOld);   
+    }
+    
     public static function save($data,$key){
         $_SESSION[$key] = serialize($data);
     }
