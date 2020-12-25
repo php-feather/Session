@@ -1,11 +1,5 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 require 'vendor/autoload.php';
 
 /**
@@ -15,32 +9,33 @@ require 'vendor/autoload.php';
   'id' varchar(50) primary key not null,
   'data' mediumtext,
   'access' int(10) unsigned default null
-)
- * 
+  )
+ *
  */
+function dbSession()
+{
 
-function dbSession(){
-    
 
-    $dbconfig=[
-        'dsn'=>'mysql:host=localhost;dbname=test',
-        'user'=>'root',
-        'password'=>''
+    $dbconfig = [
+        'dsn' => 'mysql:host=localhost;dbname=test',
+        'user' => 'root',
+        'password' => ''
     ];
-    
+
     $driver = new \Feather\Session\Drivers\DatabaseDriver($dbconfig);
-    session_start();
-    
+    $driver->start();
 }
 
-function fileSession(){
+function fileSession()
+{
     $driver = new \Feather\Session\Drivers\FileDriver(dirname(__FILE__));
-    session_start();
+    $driver->start();
 }
 
-function redisSession(){
+function redisSession()
+{
     $driver = new \Feather\Session\Drivers\RedisDriver('localhost');
-    session_start();
+    $driver->start();
 }
 
 //fileSession();
@@ -49,7 +44,7 @@ function redisSession(){
 //or
 redisSession();
 
-Feather\Session\Session::set('test','steve');
+Feather\Session\Session::set('test', 'steve');
 
 var_dump(Feather\Session\Session::get('test'));
 

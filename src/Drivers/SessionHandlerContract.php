@@ -1,17 +1,29 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Feather\Session\Drivers;
 
 /**
  *
  * @author fcarbah
  */
-interface SessionHandlerContract {
+interface SessionHandlerContract
+{
+
+    /**
+     * Boot session driver
+     */
     public function activate();
+
+    /**
+     * Starts Session
+     * @param array $options
+     * @return boolean
+     */
+    public function start(array $options);
+
+    /**
+     * Check if session has started or not
+     * @return boolean
+     */
+    public function isStarted();
 }
