@@ -125,7 +125,7 @@ abstract class Driver implements SessionHandlerContract
 
         $validOptions = array_flip($this->validOptions);
 
-        foreach ($option as $option => $val) {
+        foreach ($options as $option => $val) {
 
             if ($option == 'cookie_samesite' && PHP_VERSION_ID < 70300) {
                 $this->sameSite = true;
