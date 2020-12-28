@@ -48,11 +48,12 @@ abstract class Driver implements SessionHandlerContract
             throw new \RuntimeException("Headers already sent. {$file} at line {$line}");
         }
 
+        $this->setOptions($options);
+
         if (!isset($_SESSION)) {
             if (!session_start()) {
                 throw new \RuntimeException('Failed to start session');
             }
-            $this->setOptions($options);
         }
 
         if ($this->sameSite) {
