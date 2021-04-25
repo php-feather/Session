@@ -7,7 +7,7 @@ namespace Feather\Session\Drivers;
  *
  * @author fcarbah
  */
-abstract class Driver implements SessionHandlerContract
+abstract class Driver implements ISessionHandler
 {
 
     private $validOptions = [

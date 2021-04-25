@@ -6,7 +6,7 @@ namespace Feather\Session\Drivers;
  *
  * @author fcarbah
  */
-interface SessionHandlerContract
+interface ISessionHandler
 {
 
     /**
