@@ -14,6 +14,11 @@ class FileDriver extends Driver
 
     protected $path;
 
+    /**
+     *
+     * @param string $sessionPath
+     * @throws SessionException
+     */
     public function __construct($sessionPath)
     {
 
@@ -28,6 +33,9 @@ class FileDriver extends Driver
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function activate()
     {
         session_save_path($this->path);

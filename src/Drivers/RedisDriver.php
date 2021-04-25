@@ -12,6 +12,13 @@ class RedisDriver extends Driver
 
     protected $path;
 
+    /**
+     *
+     * @param string $server
+     * @param int $port
+     * @param string $scheme
+     * @param array $connOptions
+     */
     public function __construct($server, $port = '6379', $scheme = 'tcp', array $connOptions = array())
     {
 
@@ -25,6 +32,9 @@ class RedisDriver extends Driver
         $this->path = $savePath . '?' . substr($optStr, 0, strlen($optStr) - 1);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function activate()
     {
         ini_set('session.save_handler', 'redis');

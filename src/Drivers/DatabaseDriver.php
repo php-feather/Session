@@ -14,11 +14,19 @@ class DatabaseDriver extends Driver
     private $config;
     private $table = 'feather_session';
 
-    public function __construct($config)
+    /**
+     *
+     * @param array $config DB configuration options ['dsn'=>'', 'user' =>'', 'password'=>''
+     * Associative array of PDO database config options 'dsn' ,'user', 'password' etc
+     */
+    public function __construct(array $config)
     {
         $this->config = $config;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function activate()
     {
         $this->connect();
@@ -32,6 +40,10 @@ class DatabaseDriver extends Driver
         );
     }
 
+    /**
+     *
+     * @return boolean
+     */
     public function close()
     {
         if ($this->db) {
@@ -41,6 +53,11 @@ class DatabaseDriver extends Driver
         return false;
     }
 
+    /**
+     *
+     * @param string|int $id
+     * @return type
+     */
     public function destroy($id)
     {
         $this->connect();
@@ -51,6 +68,11 @@ class DatabaseDriver extends Driver
         return $stmt->execute();
     }
 
+    /**
+     *
+     * @param int $max
+     * @return type
+     */
     public function gc($max)
     {
 
@@ -64,6 +86,10 @@ class DatabaseDriver extends Driver
         return $stmt->execute();
     }
 
+    /**
+     *
+     * @return boolean
+     */
     public function open()
     {
 
@@ -72,6 +98,11 @@ class DatabaseDriver extends Driver
         return $this->db ? true : false;
     }
 
+    /**
+     *
+     * @param string|int $id
+     * @return string
+     */
     public function read($id)
     {
         $this->connect();
@@ -88,6 +119,12 @@ class DatabaseDriver extends Driver
         return '';
     }
 
+    /**
+     *
+     * @param string|int $id
+     * @param mixed $data
+     * @return boolean
+     */
     public function write($id, $data)
     {
 
@@ -105,6 +142,10 @@ class DatabaseDriver extends Driver
         return $stmt->execute();
     }
 
+    /**
+     *
+     * @throws \Exception
+     */
     protected function connect()
     {
         if (!$this->db) {
