@@ -2,6 +2,8 @@
 
 namespace Feather\Session\Drivers;
 
+use Feather\Support\Database\Dbal;
+
 /**
  * Description of Database
  *
@@ -10,17 +12,23 @@ namespace Feather\Session\Drivers;
 class DatabaseDriver extends Driver
 {
 
+    /** @var \Feather\Support\Database\Dbal * */
     private $db;
+
+    /** @var array * */
     private $config;
-    private $table = 'feather_session';
+
+    /** @var string * */
+    private $table = 'sessions';
 
     /**
      *
-     * @param array $config DB configuration options ['dsn'=>'', 'user' =>'', 'password'=>''
+     * @param array $config DB configuration options ['dsn'=>'', 'user' =>'', 'password'=>'', 'pdoOptions' => [], 'table' => '']
      * Associative array of PDO database config options 'dsn' ,'user', 'password' etc
      */
     public function __construct(array $config)
     {
+        $this->table = $config['table'] ?? $this->table;
         $this->config = $config;
     }
 
@@ -61,9 +69,9 @@ class DatabaseDriver extends Driver
     public function destroy($id)
     {
         $this->connect();
-        $sql = 'delete from ' . $this->table . ' where id=:id';
+        $sql = 'DELETE FROM ' . $this->table . ' where id = :id';
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_STR);
 
         return $stmt->execute();
     }
@@ -78,7 +86,7 @@ class DatabaseDriver extends Driver
 
         $old = time() - $max;
 
-        $sql = 'delete from ' . $this->table . ' where access < :old';
+        $sql = 'DELETE FROM ' . $this->table . ' WHERE expire_at < :old';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':old', $old);
@@ -106,17 +114,17 @@ class DatabaseDriver extends Driver
     public function read($id)
     {
         $this->connect();
-        $sql = 'select * from ' . $this->table . ' where id=:id';
+        $sql = 'SELECT id, sess_data, expire_at FROM ' . $this->table . ' WHERE id = :id';
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':id', $id);
 
         if ($stmt->execute()) {
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-            return $row ? $row['data'] : '';
+            return $row ? unserialize($row['sess_data']) : null;
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -130,14 +138,14 @@ class DatabaseDriver extends Driver
 
         $this->connect();
 
-        $time = time();
+        $time = time() + $this->getTimeout();
 
-        $sql = 'replace into ' . $this->table . ' (id,data,access) values(:id,:data,:access)';
+        $sql = 'REPLACE INTO ' . $this->table . ' (id, sess_data, expire_at) values(:id, :sess_data, :expire_at)';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':data', $data);
-        $stmt->bindValue(':access', $time);
+        $stmt->bindValue(':sess_data', serialize($data));
+        $stmt->bindValue(':expire_at', $time);
 
         return $stmt->execute();
     }
@@ -149,12 +157,18 @@ class DatabaseDriver extends Driver
     protected function connect()
     {
         if (!$this->db) {
-            try {
-                $this->db = new \PDO($this->config['dsn'], $this->config['user'], $this->config['password']);
-            } catch (\Exception $e) {
-                throw new \Exception('Error connecting to database', 300, $e);
-            }
+            $this->db = new Dbal($this->config['dsn'], $this->config['user'], $this->config['password'], $this->config['pdoOptions']);
+            $this->db->connect();
         }
+    }
+
+    /**
+     *
+     * @return int
+     */
+    protected function getTimeout()
+    {
+        return (int) ini_get('session.gc_maxlifetime');
     }
 
 }
