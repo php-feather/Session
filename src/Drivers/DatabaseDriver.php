@@ -37,7 +37,7 @@ class DatabaseDriver extends Driver
      */
     public function activate()
     {
-        $this->connect();
+        session_cache_limiter('private');
         session_set_save_handler(
                 array($this, "open"),
                 array($this, "close"),
@@ -157,7 +157,7 @@ class DatabaseDriver extends Driver
     protected function connect()
     {
         if (!$this->db) {
-            $this->db = new Dbal($this->config['dsn'], $this->config['user'], $this->config['password'], $this->config['pdoOptions']);
+            $this->db = new Dbal($this->config['dsn'], $this->config['user'], $this->config['password'], $this->config['pdoOptions'] ?? []);
             $this->db->connect();
         }
     }

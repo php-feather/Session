@@ -17,9 +17,9 @@ class Session
     public static function flush($destroy = false)
     {
         if ($destroy) {
-            session_destroy();
+            return session_destroy();
         } else {
-            session_unset();
+            return session_unset();
         }
     }
 
@@ -43,6 +43,21 @@ class Session
         }
 
         return $data;
+    }
+
+    /**
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public static function remove($key)
+    {
+
+        if (array_key_exists($key, $_SESSION)) {
+            unset($_SESSION[$key]);
+            return true;
+        }
+        return false;
     }
 
     /**

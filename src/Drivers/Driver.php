@@ -83,7 +83,7 @@ abstract class Driver implements ISessionHandler
     protected function getSessionCookie()
     {
         $sessionCookiePrefix = urlencode(session_name()) . '=';
-        $sessionCookieWithId = $sessionName . session_id();
+        $sessionCookieWithId = $sessionCookiePrefix . session_id();
         $otherCookies = [];
         $sessionCookie = null;
 
