@@ -50,7 +50,7 @@ abstract class Driver implements ISessionHandler
 
         $this->setOptions($options);
 
-        if (!isset($_SESSION)) {
+        if (session_status() == PHP_SESSION_NONE) {
             if (!session_start()) {
                 throw new \RuntimeException('Failed to start session');
             }

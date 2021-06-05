@@ -121,10 +121,10 @@ class DatabaseDriver extends Driver
         if ($stmt->execute()) {
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-            return $row ? unserialize($row['sess_data']) : null;
+            return $row ? unserialize($row['sess_data']) : '';
         }
 
-        return null;
+        return '';
     }
 
     /**
