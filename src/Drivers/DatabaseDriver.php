@@ -2,7 +2,7 @@
 
 namespace Feather\Session\Drivers;
 
-use Feather\Support\Database\Dbal;
+use Feather\Support\Database\Connection;
 
 /**
  * Description of Database
@@ -12,7 +12,7 @@ use Feather\Support\Database\Dbal;
 class DatabaseDriver extends Driver
 {
 
-    /** @var \Feather\Support\Database\Dbal * */
+    /** @var \Feather\Support\Database\Connection * */
     private $db;
 
     /** @var array * */
@@ -23,7 +23,7 @@ class DatabaseDriver extends Driver
 
     /**
      *
-     * @param array $config DB configuration options ['dsn'=>'', 'user' =>'', 'password'=>'', 'pdoOptions' => [], 'table' => '']
+     * @param array $config DB configuration options ['table' => '']
      * Associative array of PDO database config options 'dsn' ,'user', 'password' etc
      */
     public function __construct(array $config)
@@ -128,6 +128,17 @@ class DatabaseDriver extends Driver
     }
 
     /**
+     * Set Database connection
+     * @param \Feather\Support\Database\Connection $db
+     * @return $this
+     */
+    public function setDBConnection(\Feather\Support\Database\Connection $db)
+    {
+        $this->db = $db;
+        return $this;
+    }
+
+    /**
      *
      * @param string|int $id
      * @param mixed $data
@@ -156,10 +167,7 @@ class DatabaseDriver extends Driver
      */
     protected function connect()
     {
-        if (!$this->db) {
-            $this->db = new Dbal($this->config['dsn'], $this->config['user'], $this->config['password'], $this->config['pdoOptions'] ?? []);
-            $this->db->connect();
-        }
+        $this->db->connect();
     }
 
     /**
