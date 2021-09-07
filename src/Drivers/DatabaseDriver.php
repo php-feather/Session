@@ -26,10 +26,11 @@ class DatabaseDriver extends Driver
      * @param array $config DB configuration options ['table' => '']
      * Associative array of PDO database config options 'dsn' ,'user', 'password' etc
      */
-    public function __construct(array $config)
+    public function __construct(\Feather\Support\Database\Connection $db, array $config)
     {
         $this->table = $config['table'] ?? $this->table;
         $this->config = $config;
+        $this->db = $db;
     }
 
     /**
