@@ -32,12 +32,13 @@ class Session
     /**
      *
      * @param string $key
-     * @param boolean $remove
+     * @param mixed $default
+     * @param bool $remove
      * @return mixed
      */
-    public static function get($key, $remove = false)
+    public static function get($key, $default = null, $remove = false)
     {
-        $data = null;
+        $data = $default;
 
         if (isset($_SESSION[$key])) {
             $data = $_SESSION[$key];
