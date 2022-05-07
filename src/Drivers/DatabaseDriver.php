@@ -84,7 +84,7 @@ class DatabaseDriver extends Driver
         $sql = 'DELETE FROM ' . $this->table . ' WHERE expire_at < :old';
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':old', $old);
+        $stmt->bindValue(':old', $old, \PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -112,7 +112,7 @@ class DatabaseDriver extends Driver
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':id', $id, \PDO::PARAM_STR);
-        $stmt->bindValue(':time', $time, \PDO::PARAM_INT);
+        $stmt->bindValue(':time', $expTime, \PDO::PARAM_INT);
 
         if ($stmt->execute()) {
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -147,9 +147,9 @@ class DatabaseDriver extends Driver
         $sql = 'REPLACE INTO ' . $this->table . ' (id, sess_data, expire_at) values(:id, :sess_data, :expire_at)';
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':sess_data', serialize($data));
-        $stmt->bindValue(':expire_at', $time);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_STR);
+        $stmt->bindValue(':sess_data', serialize($data), \PDO::PARAM_STR);
+        $stmt->bindValue(':expire_at', $time, \PDO::PARAM_INT);
 
         return $stmt->execute();
     }
