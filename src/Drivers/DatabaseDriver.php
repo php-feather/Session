@@ -28,9 +28,9 @@ class DatabaseDriver extends Driver
      */
     public function __construct(\Feather\Support\Database\Connection $db, array $config)
     {
-        $this->table = $config['table'] ?? $this->table;
+        $this->table  = $config['table'] ?? $this->table;
         $this->config = $config;
-        $this->db = $db;
+        $this->db     = $db;
     }
 
     /**
@@ -51,15 +51,11 @@ class DatabaseDriver extends Driver
 
     /**
      *
-     * @return boolean
+     * @return bool
      */
     public function close()
     {
-        if ($this->db) {
-            $this->db = null;
-            return true;
-        }
-        return false;
+        return $this->db->close();
     }
 
     /**
@@ -69,8 +65,7 @@ class DatabaseDriver extends Driver
      */
     public function destroy($id)
     {
-        $this->connect();
-        $sql = 'DELETE FROM ' . $this->table . ' where id = :id';
+        $sql  = 'DELETE FROM ' . $this->table . ' where id = :id';
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':id', $id, \PDO::PARAM_STR);
 
@@ -84,7 +79,6 @@ class DatabaseDriver extends Driver
      */
     public function gc($max)
     {
-
         $old = time() - $max;
 
         $sql = 'DELETE FROM ' . $this->table . ' WHERE expire_at < :old';
@@ -97,14 +91,11 @@ class DatabaseDriver extends Driver
 
     /**
      *
-     * @return boolean
+     * @return bool
      */
     public function open()
     {
-
-        $this->connect();
-
-        return $this->db ? true : false;
+        return $this->db->connect();
     }
 
     /**
@@ -114,10 +105,14 @@ class DatabaseDriver extends Driver
      */
     public function read($id)
     {
-        $this->connect();
-        $sql = 'SELECT id, sess_data, expire_at FROM ' . $this->table . ' WHERE id = :id';
+        $expTime = time() - $this->getTimeout();
+
+        $sql = 'SELECT id, sess_data, expire_at FROM ' . $this->table .
+                ' WHERE id = :id AND expire_at > :time';
+
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_STR);
+        $stmt->bindValue(':time', $time, \PDO::PARAM_INT);
 
         if ($stmt->execute()) {
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -147,9 +142,6 @@ class DatabaseDriver extends Driver
      */
     public function write($id, $data)
     {
-
-        $this->connect();
-
         $time = time() + $this->getTimeout();
 
         $sql = 'REPLACE INTO ' . $this->table . ' (id, sess_data, expire_at) values(:id, :sess_data, :expire_at)';
@@ -160,15 +152,6 @@ class DatabaseDriver extends Driver
         $stmt->bindValue(':expire_at', $time);
 
         return $stmt->execute();
-    }
-
-    /**
-     *
-     * @throws \Exception
-     */
-    protected function connect()
-    {
-        $this->db->connect();
     }
 
     /**

@@ -12,15 +12,21 @@ class Session
 
     /**
      *
-     * @param boolean $destroy
+     * @return bool
      */
-    public static function flush($destroy = false)
+    public static function clear()
     {
-        if ($destroy) {
-            return session_destroy();
-        } else {
-            return session_unset();
-        }
+        return session_unset();
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public static function flush()
+    {
+        session_unset();
+        return session_destroy();
     }
 
     /**
@@ -31,11 +37,10 @@ class Session
      */
     public static function get($key, $remove = false)
     {
-
         $data = null;
 
         if (isset($_SESSION[$key])) {
-            $data = unserialize($_SESSION[$key]);
+            $data = $_SESSION[$key];
 
             if ($remove) {
                 unset($_SESSION[$key]);
@@ -52,7 +57,6 @@ class Session
      */
     public static function remove($key)
     {
-
         if (array_key_exists($key, $_SESSION)) {
             unset($_SESSION[$key]);
             return true;
@@ -76,7 +80,7 @@ class Session
      */
     public static function save($data, $key)
     {
-        $_SESSION[$key] = serialize($data);
+        $_SESSION[$key] = $data;
     }
 
     /**
@@ -86,7 +90,7 @@ class Session
      */
     public static function set($key, $data)
     {
-        $_SESSION[$key] = serialize($data);
+        $_SESSION[$key] = $data;
     }
 
 }
