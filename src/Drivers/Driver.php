@@ -21,8 +21,8 @@ abstract class Driver implements ISessionHandler
         'upload_progress.freq', 'upload_progress.min_freq', 'url_rewriter.tags',
         'sid_length', 'sid_bits_per_character', 'trans_sid_hosts', 'trans_sid_tags',
     ];
-    protected $started = false;
-    protected $sameSite = false;
+    protected $started    = false;
+    protected $sameSite   = false;
 
     /**
      *
@@ -84,8 +84,8 @@ abstract class Driver implements ISessionHandler
     {
         $sessionCookiePrefix = urlencode(session_name()) . '=';
         $sessionCookieWithId = $sessionCookiePrefix . session_id();
-        $otherCookies = [];
-        $sessionCookie = null;
+        $otherCookies        = [];
+        $sessionCookie       = null;
 
         foreach (headers_list() as $header) {
             if (stripos($header, 'set-cookie') !== 0) {
@@ -117,16 +117,20 @@ abstract class Driver implements ISessionHandler
     protected function setOptions(array $options)
     {
         $options += [
-            'cache_limiter' => '',
-            'cache_expire' => 0,
-            'use_cookies' => 1,
-            'lazy_write' => 1,
+            'cache_limiter'   => '',
+            'cache_expire'    => 0,
+            'use_cookies'     => 1,
+            'lazy_write'      => 1,
             'use_strict_mode' => 1,
         ];
 
         $validOptions = array_flip($this->validOptions);
 
         foreach ($options as $option => $val) {
+
+            if (($pos = stripos($option, 'session.')) === 0) {
+                $option = substr($option, 8);
+            }
 
             if ($option == 'cookie_samesite' && PHP_VERSION_ID < 70300) {
                 $this->sameSite = true;
