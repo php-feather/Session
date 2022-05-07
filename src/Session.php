@@ -52,6 +52,15 @@ class Session
 
     /**
      *
+     * @return bool
+     */
+    public static function has()
+    {
+        return array_key_exists($key, $_SESSION);
+    }
+
+    /**
+     *
      * @param string $key
      * @return boolean
      */
