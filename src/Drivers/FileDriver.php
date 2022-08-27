@@ -38,7 +38,6 @@ class FileDriver extends Driver
      */
     public function activate()
     {
-        session_cache_limiter('private');
         session_save_path($this->path);
         ini_set('session.gc_probability', 1);
     }

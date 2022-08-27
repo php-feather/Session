@@ -38,7 +38,6 @@ class RedisDriver extends Driver
      */
     public function activate()
     {
-        session_cache_limiter('private');
         ini_set('session.save_handler', 'redis');
         session_save_path($this->path);
     }
