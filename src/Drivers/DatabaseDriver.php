@@ -38,7 +38,6 @@ class DatabaseDriver extends Driver
      */
     public function activate()
     {
-        session_cache_limiter('private');
         session_set_save_handler(
                 array($this, "open"),
                 array($this, "close"),
@@ -160,7 +159,7 @@ class DatabaseDriver extends Driver
      */
     protected function getTimeout()
     {
-        return (int) ini_get('session.gc_maxlifetime');
+        return (int) ini_get('session.cookie_lifetime');
     }
 
 }
